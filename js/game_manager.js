@@ -12,6 +12,17 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   this.setup();
 }
 
+var fibs = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765];
+
+function consecutiveFibs(val, prev) {
+  for (i=0; i < fibs.length-1; ++i) {
+    if (fibs[i+1] == val && fibs[i] == prev) return true;
+    if (fibs[i+1] == prev && fibs[i] == val) return true;
+  }
+  
+  return false;
+}
+
 // Restart the game
 GameManager.prototype.restart = function () {
   this.actuator.restart();
@@ -109,7 +120,7 @@ GameManager.prototype.move = function (direction) {
         var next      = self.grid.cellContent(positions.next);
 
         // Only one merger per row traversal?
-        if (next && next.value === tile.value && !next.mergedFrom) {
+        if (next && consecutiveFibs(next.value,tile.value) && !next.mergedFrom) {
           var merged = new Tile(positions.next, tile.value * 2);
           merged.mergedFrom = [tile, next];
 
@@ -123,7 +134,7 @@ GameManager.prototype.move = function (direction) {
           self.score += merged.value;
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          if (merged.value === 6765) self.won = true;
         } else {
           self.moveTile(tile, positions.farthest);
         }
