@@ -34,6 +34,7 @@ GameManager.prototype.setup = function () {
   this.grid         = new Grid(this.size);
 
   this.score        = 0;
+  this.moves        = 0;
   this.over         = false;
   this.won          = false;
 
@@ -147,6 +148,7 @@ GameManager.prototype.move = function (direction) {
   });
 
   if (moved) {
+    this.moves++;
     this.addRandomTile();
 
     if (!this.movesAvailable()) {
